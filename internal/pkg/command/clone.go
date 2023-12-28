@@ -38,7 +38,7 @@ func getCloneCmd() *cobra.Command {
 				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
 			}
 
-			targetDir := filepath.Join(baseDir, repoPath)
+			targetDir := strings.ToLower(filepath.Join(baseDir, repoPath))
         
             if stat, err := os.Stat(targetDir); err == nil && stat.IsDir() {
                 // check if directory is empty
