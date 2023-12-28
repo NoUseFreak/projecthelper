@@ -1,6 +1,6 @@
 package main
 
-import "projecthelper/internal/pkg/command"
+import "github.com/nousefreak/projecthelper/internal/pkg/command"
 
 func main() {
     command.Execute()

@@ -1,4 +1,4 @@
-module projecthelper
+module github.com/nousefreak/projecthelper
 
 go 1.21.1
 
