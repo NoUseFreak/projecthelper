@@ -2,8 +2,8 @@ package command
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/nousefreak/projecthelper/internal/pkg/repo"
@@ -20,6 +20,7 @@ func getGoCmd() *cobra.Command {
 			if baseDir == "" {
 				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
 			}
+            var mut sync.RWMutex
             paths := []string{}
 			go func(paths *[]string) {
                 err := repo.GetRepoPathsAsync(baseDir, paths)
@@ -35,12 +36,12 @@ func getGoCmd() *cobra.Command {
 				},
 				fuzzyfinder.WithQuery(strings.Join(args, " ")),
 				fuzzyfinder.WithSelectOne(),
-                fuzzyfinder.WithHotReload(),
+                fuzzyfinder.WithHotReloadLock(mut.RLocker()),
 			)
 			switch err {
 			case nil:
 				logrus.Infof("Jumping to %s", paths[idx])
-				fmt.Fprintf(CmdOutput, "cd %s\n", filepath.Join(baseDir, paths[idx]))
+				fmt.Fprintf(CmdOutput, "cd %s\n", paths[idx])
 			case fuzzyfinder.ErrAbort:
 				logrus.Fatal("aborted")
 			default:
