@@ -10,7 +10,6 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	giturls "github.com/whilp/git-urls"
 )
 
@@ -21,6 +20,7 @@ func getCloneCmd() *cobra.Command {
 		Long:  `clone command`,
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			baseDir := getBaseDir()
 			repoURL, err := giturls.Parse(args[0])
 			if err != nil {
 				logrus.Fatal(fmt.Sprintf("Error cleaning repo URL: %s", err))
@@ -33,11 +33,6 @@ func getCloneCmd() *cobra.Command {
 			if err != nil {
 				logrus.Fatal(fmt.Sprintf("Error making git URL: %s", err))
 			}
-			baseDir := viper.GetString("basedir")
-			if baseDir == "" {
-				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
-			}
-
 			targetDir := strings.ToLower(filepath.Join(baseDir, repoPath))
         
             if stat, err := os.Stat(targetDir); err == nil && stat.IsDir() {

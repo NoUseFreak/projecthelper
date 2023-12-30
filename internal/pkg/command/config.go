@@ -15,7 +15,7 @@ func initConfig() {
 		os.Exit(1)
 	}
 	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")	
+	viper.SetConfigType("yaml")
 	viper.AddConfigPath(home + "/.config/projecthelper")
 
 	if cfgFile != "" {
@@ -24,7 +24,7 @@ func initConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		logrus.Warn(err)
-        cfgFile = home + "/.config/projecthelper/config.yaml"
+		cfgFile = home + "/.config/projecthelper/config.yaml"
 		if err := os.MkdirAll(filepath.Dir(cfgFile), 0755); err != nil {
 			logrus.Error(err)
 			os.Exit(1)
@@ -37,3 +37,10 @@ func initConfig() {
 	}
 }
 
+func getBaseDir() string {
+	baseDir := viper.GetString("basedir")
+	if baseDir == "" {
+		logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
+	}
+	return baseDir
+}
