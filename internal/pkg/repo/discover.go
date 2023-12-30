@@ -5,6 +5,31 @@ import (
 	"os"
 )
 
+func GetRepoPathsAsync(baseDir string, result *[]string) error {
+    entries, err := os.ReadDir(baseDir)
+    if err != nil {
+        return err
+    }
+
+    for _, entry := range entries {
+        if !entry.IsDir() {
+            continue
+        }
+
+        if entry.Name() == ".git" {
+            *result = append(*result, baseDir)
+            return nil
+        }
+
+        err := GetRepoPathsAsync(fmt.Sprintf("%s/%s", baseDir, entry.Name()), result)
+        if err != nil {
+            return err
+        }
+    }
+
+    return nil
+}
+
 func GetRepoPaths(baseDir string) ([]string, error) {
    result := []string{}
 

@@ -20,17 +20,22 @@ func getGoCmd() *cobra.Command {
 			if baseDir == "" {
 				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
 			}
-			paths, err := repo.GetRepoPaths(baseDir)
-			if err != nil {
-				logrus.Fatal(fmt.Errorf("failed to get repo paths: %w", err))
-			}
+            paths := []string{}
+			go func(paths *[]string) {
+                err := repo.GetRepoPathsAsync(baseDir, paths)
+                if err != nil {
+                    logrus.Fatal(fmt.Errorf("failed to get repo paths: %w", err))
+                }
+            }(&paths)
+
 			idx, err := fuzzyfinder.Find(
-				paths,
+				&paths,
 				func(i int) string {
 					return paths[i]
 				},
 				fuzzyfinder.WithQuery(strings.Join(args, " ")),
 				fuzzyfinder.WithSelectOne(),
+                fuzzyfinder.WithHotReload(),
 			)
 			switch err {
 			case nil:
