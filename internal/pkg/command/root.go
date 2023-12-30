@@ -34,6 +34,7 @@ func Execute() {
 	rootCmd.AddCommand(getSetupCmd())
     rootCmd.AddCommand(getUpdateCmd())
     rootCmd.AddCommand(getVersionCmd())
+    rootCmd.AddCommand(getRepoCmd())
 
 	cobra.OnInitialize(config.InitConfig)
 

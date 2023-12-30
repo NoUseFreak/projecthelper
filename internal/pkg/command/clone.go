@@ -21,34 +21,47 @@ func getCloneCmd() *cobra.Command {
 		Long:  `clone command`,
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+            dir, err := cloneRepo(args[0])
+            if ; err != nil {
+                logrus.Fatal(err)
+            }
+
+            fmt.Fprintf(CmdOutput, "cd %s \n", dir)
+		},
+	}
+	return cloneCmd
+}
+
+var ErrDirectoryAlreadyExists = fmt.Errorf("Directory already exists")
+
+func cloneRepo(repo string) (string, error) {
 			baseDir := config.GetBaseDir()
-			repoURL, err := giturls.Parse(args[0])
+			repoURL, err := giturls.Parse(repo)
 			if err != nil {
-				logrus.Fatal(fmt.Sprintf("Error cleaning repo URL: %s", err))
+				return "", fmt.Errorf("Error cleaning repo URL: %w", err)
 			}
 			repoPath, err := makePath(repoURL)
 			if err != nil {
-				logrus.Fatal(fmt.Sprintf("Error parsing repo URL: %s", err))
+				return "", fmt.Errorf("Error parsing repo URL: %s", err)
 			}
 			gitURL, err := makeURL(repoURL)
 			if err != nil {
-				logrus.Fatal(fmt.Sprintf("Error making git URL: %s", err))
+			    return "", fmt.Errorf("Error making git URL: %s", err)
 			}
 			targetDir := strings.ToLower(filepath.Join(baseDir, repoPath))
 
 			if stat, err := os.Stat(targetDir); err == nil && stat.IsDir() {
 				// check if directory is empty
 				if _, err := os.ReadDir(targetDir); err == nil {
-					logrus.Fatalf("Directory %s already exists and is not empty", targetDir)
+                    return "", fmt.Errorf("Directory %s already exists and is not empty: %w", targetDir, ErrDirectoryAlreadyExists)
 				}
 			}
 
-			logrus.Infof("Cloning %s into %s", gitURL, targetDir)
-			fmt.Fprintf(CmdOutput, "git clone %s %s && cd %s\n", gitURL, targetDir, targetDir)
-		},
-	}
-	return cloneCmd
-}
+			fmt.Fprintf(CmdOutput, "(echo \"\\033[0;32m*\\033[0m Cloning %s into %s\" && git clone %s %s)\n", gitURL, targetDir, gitURL, targetDir)
+
+            return targetDir, nil
+        }
+
 
 func makeURL(u *url.URL) (string, error) {
 	hostRename := [][]string{
