@@ -3,7 +3,6 @@ package repo
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 )
 
 func GetRepoPaths(baseDir string) ([]string, error) {
