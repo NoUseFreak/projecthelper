@@ -7,28 +7,29 @@ import (
 )
 
 func GetRepoPaths(baseDir string) ([]string, error) {
-	result := []string{}
-	if err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return fmt.Errorf("failed to walk path %s: %w", path, err)
-		}
-		if !info.IsDir() {
-			return nil
-		}
-		relPath, err := filepath.Rel(baseDir, path)
-		if err != nil {
-			return fmt.Errorf("failed to get relative path for %s: %w", path, err)
-		}
-		if info.Name() != ".git" {
-			return nil
-		}
+   result := []string{}
 
-		result = append(result, filepath.Dir(relPath))
+    entries, err := os.ReadDir(baseDir)
+    if err != nil {
+        return result, err
+    }
 
-		return err
-	}); err != nil {
-		return nil, err
-	}
+    for _, entry := range entries {
+        if !entry.IsDir() {
+            continue
+        }
 
-	return result, nil
+        if entry.Name() == ".git" {
+            return []string{baseDir}, nil
+        }
+
+        paths, err := GetRepoPaths(fmt.Sprintf("%s/%s", baseDir, entry.Name()))
+        if err != nil {
+            return result, err
+        }
+
+        result = append(result, paths...)
+    }
+
+    return result, nil
 }
