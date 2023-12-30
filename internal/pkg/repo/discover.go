@@ -3,6 +3,7 @@ package repo
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
@@ -56,4 +57,14 @@ func GetRepoPaths(baseDir string) ([]string, error) {
     }
 
     return result, nil
+}
+
+func FilterRepoPaths(paths []string, filter string) []string {
+    result := []string{}
+    for _, path := range paths {
+        if strings.Contains(path, filter) {
+            result = append(result, path)
+        }
+    }
+    return result
 }

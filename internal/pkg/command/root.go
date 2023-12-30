@@ -3,13 +3,13 @@ package command
 import (
 	"os"
 
+	"github.com/nousefreak/projecthelper/internal/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var (
 	cmdName = "ph"
-	cfgFile string
 )
 
 func getRootCmd() *cobra.Command {
@@ -35,7 +35,7 @@ func Execute() {
     rootCmd.AddCommand(getUpdateCmd())
     rootCmd.AddCommand(getVersionCmd())
 
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(config.InitConfig)
 
 	rootCmd.SetOut(os.Stderr)
 	if err := rootCmd.Execute(); err != nil {

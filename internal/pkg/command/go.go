@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/ktr0731/go-fuzzyfinder"
+	"github.com/nousefreak/projecthelper/internal/pkg/config"
 	"github.com/nousefreak/projecthelper/internal/pkg/repo"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ func getGoCmd() *cobra.Command {
 		Use:   "go",
 		Short: "go to a project",
 		Run: func(cmd *cobra.Command, args []string) {
-			baseDir := getBaseDir()
+			baseDir := config.GetBaseDir()
 			if baseDir == "" {
 				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
 			}
