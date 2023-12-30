@@ -11,6 +11,7 @@ import (
 	"github.com/nousefreak/projecthelper/internal/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	giturls "github.com/whilp/git-urls"
 )
 
@@ -57,21 +58,19 @@ func cloneRepo(repo string) (string, error) {
 				}
 			}
 
-			fmt.Fprintf(CmdOutput, "(echo \"\\033[0;32m*\\033[0m Cloning %s into %s\" && git clone %s %s)\n", gitURL, targetDir, gitURL, targetDir)
+			fmt.Fprintf(CmdOutput, "(echo \"\\033[0;32m*\\033[0m Cloning %s into %s\" && git clone %s %s) \n", gitURL, targetDir, gitURL, targetDir)
 
             return targetDir, nil
         }
 
 
 func makeURL(u *url.URL) (string, error) {
-	hostRename := [][]string{
-		{"github.com/org", "gh-repo"},
-	}
+    renameRepo := viper.GetStringMapString("renameRepo")
 
-	for _, set := range hostRename {
-		r := regexp.MustCompile(regexp.QuoteMeta(set[0]))
+	for match, host := range renameRepo {
+		r := regexp.MustCompile(regexp.QuoteMeta(match))
 		if r.MatchString(u.String()) {
-			u.Host = set[1]
+			u.Host = host
 		}
 	}
 

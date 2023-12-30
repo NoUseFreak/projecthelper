@@ -54,7 +54,6 @@ func getRepoFunc(org string) func() ([]*github.Repository, bool, error) {
 			},
 		}
 		return func() ([]*github.Repository, bool, error) {
-			fmt.Printf("Fetching page %d\n", opts.Page)
 			repos, resp, err := client.Repositories.ListByUser(context.Background(), org, opts)
 			opts.Page = resp.NextPage
 			return repos, resp.NextPage == 0, err
@@ -71,7 +70,6 @@ func getRepoFunc(org string) func() ([]*github.Repository, bool, error) {
 		},
 	}
 	return func() ([]*github.Repository, bool, error) {
-		fmt.Printf("Fetching page %d\n", opts.Page)
 		repos, resp, err := client.Repositories.ListByAuthenticatedUser(context.Background(), opts)
 		opts.Page = resp.NextPage
 		return repos, resp.NextPage == 0, err
@@ -122,9 +120,8 @@ func cloneGithubOrg(org string) error {
 				logrus.Warn(err)
 			}
 		} else {
-
-			fmt.Fprintf(CmdOutput, ";")
-		}
+            fmt.Fprint(os.Stdout, " ; ")
+        }
 	}
 
 	return nil
