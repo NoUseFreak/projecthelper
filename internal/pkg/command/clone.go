@@ -45,7 +45,7 @@ func cloneRepo(repo string) (string, error) {
 			if err != nil {
 				return "", fmt.Errorf("Error parsing repo URL: %s", err)
 			}
-			gitURL, err := makeURL(repoURL)
+			gitURL, err := makeURL(repoURL, viper.GetStringMapString("renameRepo"))
 			if err != nil {
 			    return "", fmt.Errorf("Error making git URL: %s", err)
 			}
@@ -64,9 +64,7 @@ func cloneRepo(repo string) (string, error) {
         }
 
 
-func makeURL(u *url.URL) (string, error) {
-    renameRepo := viper.GetStringMapString("renameRepo")
-
+func makeURL(u *url.URL, renameRepo map[string]string) (string, error) {
 	for match, host := range renameRepo {
 		r := regexp.MustCompile(regexp.QuoteMeta(match))
 		if r.MatchString(u.String()) {
