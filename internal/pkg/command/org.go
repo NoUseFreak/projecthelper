@@ -14,10 +14,10 @@ import (
 
 var cloneForks bool
 
-func getRepoCmd() *cobra.Command {
+func getOrgCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "repo",
-		Short: "repo",
+		Use:   "org",
+		Short: "org",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			parts := strings.Split(args[0], "/")
