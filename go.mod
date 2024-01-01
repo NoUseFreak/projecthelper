@@ -3,6 +3,7 @@ module github.com/nousefreak/projecthelper
 go 1.21.1
 
 require (
+	github.com/NoUseFreak/go-parallel v0.0.0-20190604224018-2ba374bf3cf1
 	github.com/erikgeiser/promptkit v0.9.0
 	github.com/google/go-github/v57 v57.0.0
 	github.com/ktr0731/go-fuzzyfinder v0.8.0

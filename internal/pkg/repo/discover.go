@@ -7,64 +7,43 @@ import (
 )
 
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
-    entries, err := os.ReadDir(baseDir)
-    if err != nil {
-        return err
-    }
+	entries, err := os.ReadDir(baseDir)
+	if err != nil {
+		return err
+	}
 
-    for _, entry := range entries {
-        if !entry.IsDir() {
-            continue
-        }
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
 
-        if entry.Name() == ".git" {
-            *result = append(*result, baseDir)
-            return nil
-        }
+		if entry.Name() == ".git" {
+			*result = append(*result, baseDir)
+			return nil
+		}
 
-        err := GetRepoPathsAsync(fmt.Sprintf("%s/%s", baseDir, entry.Name()), result)
-        if err != nil {
-            return err
-        }
-    }
+		err := GetRepoPathsAsync(fmt.Sprintf("%s/%s", baseDir, entry.Name()), result)
+		if err != nil {
+			return err
+		}
+	}
 
-    return nil
+	return nil
 }
 
 func GetRepoPaths(baseDir string) ([]string, error) {
-   result := []string{}
+	result := []string{}
+	err := GetRepoPathsAsync(baseDir, &result)
 
-    entries, err := os.ReadDir(baseDir)
-    if err != nil {
-        return result, err
-    }
-
-    for _, entry := range entries {
-        if !entry.IsDir() {
-            continue
-        }
-
-        if entry.Name() == ".git" {
-            return []string{baseDir}, nil
-        }
-
-        paths, err := GetRepoPaths(fmt.Sprintf("%s/%s", baseDir, entry.Name()))
-        if err != nil {
-            return result, err
-        }
-
-        result = append(result, paths...)
-    }
-
-    return result, nil
+	return result, err
 }
 
 func FilterRepoPaths(paths []string, filter string) []string {
-    result := []string{}
-    for _, path := range paths {
-        if strings.Contains(path, filter) {
-            result = append(result, path)
-        }
-    }
-    return result
+	result := []string{}
+	for _, path := range paths {
+		if strings.Contains(path, filter) {
+			result = append(result, path)
+		}
+	}
+	return result
 }

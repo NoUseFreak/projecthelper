@@ -1,3 +1,5 @@
+github.com/NoUseFreak/go-parallel v0.0.0-20190604224018-2ba374bf3cf1 h1:ikIoLWQxSLM8ij5jTtrwd4G4Nu9URZqpHLjr6rp/pdw=
+github.com/NoUseFreak/go-parallel v0.0.0-20190604224018-2ba374bf3cf1/go.mod h1:SgEeD5hW/Qrgzcq6Xj9sXq+To5azjcbCvljmqxFaXY0=
 github.com/atotto/clipboard v0.1.4 h1:EH0zSVneZPSuFR11BlR9YppQTVDbh5+16AmcJi4g1z4=
 github.com/atotto/clipboard v0.1.4/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
