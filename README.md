@@ -36,3 +36,11 @@ ph update`
 ph wdid 2 days
 ```
 
+## Badges
+
+![Releases](https://img.shields.io/github/v/release/nousefreak/projecthelper?style=for-the-badge)
+![Build status](https://img.shields.io/github/actions/workflow/status/nousefreak/projecthelper/ci.yml?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/nousefreak/projecthelper?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/powered--by-stenic.io-blue?style=for-the-badge&logoColor=blue)
+
+
