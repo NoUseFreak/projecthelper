@@ -12,6 +12,7 @@ func GetRepoPathsAsync(baseDir string, result *[]string) error {
 		return err
 	}
 
+    subdirs := []string{}
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			continue
@@ -21,12 +22,16 @@ func GetRepoPathsAsync(baseDir string, result *[]string) error {
 			*result = append(*result, baseDir)
 			return nil
 		}
-
-		err := GetRepoPathsAsync(fmt.Sprintf("%s/%s", baseDir, entry.Name()), result)
-		if err != nil {
-			return err
-		}
+        
+        subdirs = append(subdirs, entry.Name())
 	}
+
+    for _, subdir := range subdirs {
+        err := GetRepoPathsAsync(fmt.Sprintf("%s/%s", baseDir, subdir), result)
+        if err != nil {
+            return err
+        }
+    }
 
 	return nil
 }
