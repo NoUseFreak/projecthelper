@@ -18,7 +18,7 @@ import (
 func getCloneCmd() *cobra.Command {
 	cloneCmd := &cobra.Command{
 		Use:   "clone REPO_URL",
-		Short: "clone a repository into the project structure",
+		Short: "Clone a repository into the project structure",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
             dir, err := cloneRepo(args[0])

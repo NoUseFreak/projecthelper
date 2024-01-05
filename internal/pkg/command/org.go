@@ -17,7 +17,7 @@ var cloneForks bool
 func getOrgCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "org ORANIZATION_URL",
-		Short: "org clones repositories from an organization into the project structure",
+		Short: "Clone repositories from an organization into the project structure",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			parts := strings.Split(args[0], "/")

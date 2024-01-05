@@ -13,7 +13,7 @@ import (
 func getUpdateCmd() *cobra.Command {
     updateCmd := &cobra.Command{
         Use:   "update",
-        Short: "update runs git fetch on all repos",
+        Short: "Run git fetch on all repos",
         Run: func(cmd *cobra.Command, args []string) {
             baseDir := config.GetBaseDir()
             repoPaths, err := repo.GetRepoPaths(baseDir)

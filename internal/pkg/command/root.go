@@ -15,7 +15,14 @@ var (
 func getRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   cmdName,
-		Short: "project helper",
+		Short: "Project helper",
+        Long: `Project helper is a tool to help you manage and interact with your projects.
+
+        It follows a simple convention of having all git projects cloned into a directory that reflects the git url.
+        ex: git@github.com:nousefreak/projecthelper.git
+            -> {basedir}/github.com/nousefreak/projecthelper
+
+        `,
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			getGoCmd().Run(cmd, args)

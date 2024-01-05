@@ -14,8 +14,9 @@ import (
 
 func getGoCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "go",
-		Short: "go to a project",
+		Use:   "go [search]",
+        Aliases: []string{"cd"},
+		Short: "Fuzzyfind a project and jump to it",
 		Run: func(cmd *cobra.Command, args []string) {
 			baseDir := config.GetBaseDir()
 			if baseDir == "" {
