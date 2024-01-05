@@ -13,7 +13,7 @@ import (
 func getInstallCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "install",
-		Short: "Install the wd command",
+		Short: fmt.Sprintf("Install the %s command", cmdName),
 		Run: func(cmd *cobra.Command, args []string) {
 			exec, _ := os.Executable()
 			script := fmt.Sprintf("%s () { eval $(%s $@) }", cmdName, exec)

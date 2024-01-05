@@ -14,7 +14,7 @@ var (
 
 func getRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:   "ph",
+		Use:   cmdName,
 		Short: "project helper",
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {

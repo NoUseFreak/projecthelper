@@ -16,9 +16,8 @@ import (
 
 func getWDIDCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "wdid",
-		Short: "wdid",
-		Long:  `wdid`,
+		Use:   "wdid [AMOUNT UNIT]",
+		Short: "Generate a WhatDidIDo report over a period of time",
 		Run: func(cmd *cobra.Command, args []string) {
 
 			amount := "1"
