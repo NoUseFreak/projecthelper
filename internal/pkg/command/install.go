@@ -16,7 +16,7 @@ func getInstallCmd() *cobra.Command {
 		Short: fmt.Sprintf("Install the %s command", cmdName),
 		Run: func(cmd *cobra.Command, args []string) {
 			exec, _ := os.Executable()
-			script := fmt.Sprintf("%s () { eval $(%s $@) }", cmdName, exec)
+			script := fmt.Sprintf("%s () { eval $(%s go $@) }", cmdName, exec)
 			installScript(script, os.Getenv("SHELL"))
 		},
 	}
