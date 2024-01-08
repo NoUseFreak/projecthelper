@@ -31,7 +31,8 @@ func getTmuxCmd() *cobra.Command {
 
 			}
 
-			isRunning := exec.Command("pgrep", "tmux").Run() == nil
+			out, err := exec.Command("pgrep", "tmux").Output()
+            isRunning := err == nil && len(out) > 0
 
 			if !isRunning {
 				logrus.Infof("Starting tmux with new session '%s' %s", name, path)
@@ -47,7 +48,11 @@ func getTmuxCmd() *cobra.Command {
 			}
 
 			logrus.Infof("Switch to session '%s' %s", name, path)
-			fmt.Fprintf(CmdOutput, "tmux switch-client -t %s; ", name)
+            if os.Getenv("TMUX") != "" {
+                fmt.Fprintf(CmdOutput, "tmux switch-client -t %s; ", name)
+            } else {
+                fmt.Fprintf(CmdOutput, "tmux attach-session -t %s; ", name)
+            }
 		},
 	}
 	return cmd
