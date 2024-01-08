@@ -14,36 +14,15 @@ import (
 
 func getGoCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "go [search]",
-        Aliases: []string{"cd"},
-		Short: "Fuzzyfind a project and jump to it",
+		Use:     "go [search]",
+		Aliases: []string{"cd"},
+		Short:   "Fuzzyfind a project and jump to it",
 		Run: func(cmd *cobra.Command, args []string) {
-			baseDir := config.GetBaseDir()
-			if baseDir == "" {
-				logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
-			}
-            var mut sync.RWMutex
-            paths := []string{}
-			go func(paths *[]string) {
-                err := repo.GetRepoPathsAsync(baseDir, paths)
-                if err != nil {
-                    logrus.Fatal(fmt.Errorf("failed to get repo paths: %w", err))
-                }
-            }(&paths)
-
-			idx, err := fuzzyfinder.Find(
-				&paths,
-				func(i int) string {
-					return paths[i]
-				},
-				fuzzyfinder.WithQuery(strings.Join(args, " ")),
-				fuzzyfinder.WithSelectOne(),
-                fuzzyfinder.WithHotReloadLock(mut.RLocker()),
-			)
+            path, err := findPath(strings.Join(args, " "))
 			switch err {
 			case nil:
-				logrus.Infof("Jumping to %s", paths[idx])
-				fmt.Fprintf(CmdOutput, "cd %s\n", paths[idx])
+				logrus.Infof("Jumping to %s", path)
+				fmt.Fprintf(CmdOutput, "cd %s\n", path)
 			case fuzzyfinder.ErrAbort:
 				logrus.Fatal("aborted")
 			default:
@@ -54,3 +33,31 @@ func getGoCmd() *cobra.Command {
 	return cmd
 }
 
+func findPath(query string) (string, error) {
+	baseDir := config.GetBaseDir()
+	if baseDir == "" {
+		logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
+	}
+	var mut sync.RWMutex
+	paths := []string{}
+	go func(paths *[]string) {
+		err := repo.GetRepoPathsAsync(baseDir, paths)
+		if err != nil {
+			logrus.Fatal(fmt.Errorf("failed to get repo paths: %w", err))
+		}
+	}(&paths)
+
+	idx, err := fuzzyfinder.Find(
+		&paths,
+		func(i int) string {
+			return paths[i]
+		},
+		fuzzyfinder.WithQuery(query),
+		fuzzyfinder.WithSelectOne(),
+		fuzzyfinder.WithHotReloadLock(mut.RLocker()),
+	)
+    if err != nil {
+        return "", err
+    }
+	return paths[idx], nil
+}
