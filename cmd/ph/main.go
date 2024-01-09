@@ -2,7 +2,6 @@ package main
 
 import "github.com/nousefreak/projecthelper/internal/pkg/command"
 
-
 var (
 	Version = "dev"
 	Commit  = "none"
@@ -10,8 +9,8 @@ var (
 )
 
 func main() {
-    command.Version = Version
-    command.Commit = Commit
-    command.Date = Date
+	command.Version = Version
+	command.Commit = Commit
+	command.Date = Date
 	command.Execute()
 }

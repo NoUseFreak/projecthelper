@@ -18,7 +18,7 @@ func getGoCmd() *cobra.Command {
 		Aliases: []string{"cd"},
 		Short:   "Fuzzyfind a project and jump to it",
 		Run: func(cmd *cobra.Command, args []string) {
-            path, err := findPath(strings.Join(args, " "))
+			path, err := findPath(strings.Join(args, " "))
 			switch err {
 			case nil:
 				logrus.Infof("Jumping to %s", path)
@@ -56,8 +56,8 @@ func findPath(query string) (string, error) {
 		fuzzyfinder.WithSelectOne(),
 		fuzzyfinder.WithHotReloadLock(mut.RLocker()),
 	)
-    if err != nil {
-        return "", err
-    }
+	if err != nil {
+		return "", err
+	}
 	return paths[idx], nil
 }

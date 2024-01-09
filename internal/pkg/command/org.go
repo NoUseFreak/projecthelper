@@ -120,8 +120,8 @@ func cloneGithubOrg(org string) error {
 				logrus.Warn(err)
 			}
 		} else {
-            fmt.Fprint(os.Stdout, " ; ")
-        }
+			fmt.Fprint(os.Stdout, " ; ")
+		}
 	}
 
 	return nil

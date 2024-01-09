@@ -46,4 +46,3 @@ func (f cliFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	b.WriteString("\n")
 	return b.Bytes(), nil
 }
-

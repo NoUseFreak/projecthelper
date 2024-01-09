@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 var (
 	Version string
 	Commit  string
@@ -29,4 +28,3 @@ func getVersionCmd() *cobra.Command {
 		},
 	}
 }
-
