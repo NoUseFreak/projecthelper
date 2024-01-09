@@ -1,6 +1,7 @@
 package command
 
 import (
+	"io"
 	"os"
 
 	"github.com/nousefreak/projecthelper/internal/pkg/config"
@@ -10,6 +11,8 @@ import (
 
 var (
 	cmdName = "ph"
+
+    quite bool
 )
 
 func getRootCmd() *cobra.Command {
@@ -28,6 +31,7 @@ func getRootCmd() *cobra.Command {
 			getGoCmd().Run(cmd, args)
 		},
 	}
+    rootCmd.PersistentFlags().BoolVarP(&quite, "quite", "q", true, "Hide output")
 	return rootCmd
 }
 
@@ -48,6 +52,12 @@ func Execute() {
 	cobra.OnInitialize(config.InitConfig)
 
 	rootCmd.SetOut(os.Stderr)
+
+    if quite {
+        logrus.SetOutput(io.Discard)
+        rootCmd.SetOut(io.Discard)
+    }
+
 	if err := rootCmd.Execute(); err != nil {
 		logrus.Fatal(err)
 	}

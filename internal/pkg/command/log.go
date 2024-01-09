@@ -47,6 +47,3 @@ func (f cliFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (f cliFormatter) color(a int, msg string) string {
-	return color.Color(a, msg)
-}
