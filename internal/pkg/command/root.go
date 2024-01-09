@@ -1,7 +1,6 @@
 package command
 
 import (
-	"io"
 	"os"
 
 	"github.com/nousefreak/projecthelper/internal/pkg/config"
@@ -12,7 +11,7 @@ import (
 var (
 	cmdName = "ph"
 
-	quite bool
+	showOutput bool
 )
 
 func getRootCmd() *cobra.Command {
@@ -31,7 +30,7 @@ func getRootCmd() *cobra.Command {
 			getGoCmd().Run(cmd, args)
 		},
 	}
-	rootCmd.PersistentFlags().BoolVarP(&quite, "quite", "q", true, "Hide output")
+	rootCmd.PersistentFlags().BoolVar(&showOutput, "show-output", true, "Show output")
 	return rootCmd
 }
 
@@ -50,13 +49,9 @@ func Execute() {
 	rootCmd.AddCommand(getTmuxCmd())
 
 	cobra.OnInitialize(config.InitConfig)
+	cobra.OnInitialize(initLogging)
 
 	rootCmd.SetOut(os.Stderr)
-
-	if quite {
-		logrus.SetOutput(io.Discard)
-		rootCmd.SetOut(io.Discard)
-	}
 
 	if err := rootCmd.Execute(); err != nil {
 		logrus.Fatal(err)

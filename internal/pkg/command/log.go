@@ -2,6 +2,7 @@ package command
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"strings"
 
@@ -45,4 +46,10 @@ func (f cliFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	b.WriteString("\n")
 	return b.Bytes(), nil
+}
+
+func initLogging() {
+	if !showOutput {
+		logrus.SetOutput(io.Discard)
+	}
 }
