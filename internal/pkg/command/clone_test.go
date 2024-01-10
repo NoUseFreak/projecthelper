@@ -23,7 +23,7 @@ func Test_makeURL(t *testing.T) {
 		{
 			name: "notinma",
 			renameMap: map[string]string{
-				"bitbucket.org/bla/bla": "bb-personal",
+                "bb-personal": "bitbucket.org/bla/bla",
 			},
 			URL:     "ssh://git@github.com/bla/bla",
 			want:    "ssh://git@github.com/bla/bla",
@@ -32,7 +32,7 @@ func Test_makeURL(t *testing.T) {
 		{
 			name: "replace",
 			renameMap: map[string]string{
-				"github.com/bla": "gh-personal",
+                "gh-personal": "github.com/bla",
 			},
 			URL:     "ssh://git@github.com/bla/bla",
 			want:    "ssh://git@gh-personal/bla/bla",

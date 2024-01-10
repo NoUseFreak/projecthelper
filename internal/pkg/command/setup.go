@@ -46,6 +46,9 @@ func getSetupCmd() *cobra.Command {
 			if err := viper.WriteConfig(); err != nil {
 				logrus.Fatal(err)
 			}
+
+            logrus.Info("Setup complete")
+            logrus.Info("If you want to make more advanced changes, edit the config file at ~/.config/project-helper/config.yaml")
 		},
 	}
 

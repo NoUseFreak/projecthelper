@@ -54,6 +54,18 @@ ph update
 ph wdid 2 days
 ```
 
+## Config
+
+```yaml
+# The root of all projects
+basedir: /home/username/src
+
+# Rename repository hosts to an alias for using different ssh keys
+renameRepo:
+  gh-personal: github.com/nousefreak
+  gh-work: github.com/stenic
+```
+
 
 ## Badges
 
