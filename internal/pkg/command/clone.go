@@ -63,6 +63,10 @@ func cloneRepo(repo string) (string, error) {
 }
 
 func makeURL(u *url.URL, renameRepo map[string]string) (string, error) {
+    if u.Scheme == "http" || u.Scheme == "https" {
+        return u.String(), nil
+    }
+
 	for host, match := range renameRepo {
 		r := regexp.MustCompile(regexp.QuoteMeta(match))
 		if r.MatchString(u.String()) {

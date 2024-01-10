@@ -38,6 +38,15 @@ func Test_makeURL(t *testing.T) {
 			want:    "ssh://git@gh-personal/bla/bla",
 			wantErr: false,
 		},
+        {
+            name:      "no-replace-in-http",
+            renameMap: map[string]string{
+                "github.com/bla": "gh-personal",
+            },
+            URL:       "http://github.com/bla/bla",
+            want:      "http://github.com/bla/bla",
+            wantErr:   false,
+        },
 	}
 
 	for _, tt := range tests {
