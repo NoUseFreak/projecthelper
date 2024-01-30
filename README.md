@@ -64,6 +64,10 @@ basedir: /home/username/src
 renameRepo:
   gh-personal: github.com/nousefreak
   gh-work: github.com/stenic
+
+# Add extra static directories outside of the basedir
+extraDirs:
+  - /home/username/.config/nvim
 ```
 
 

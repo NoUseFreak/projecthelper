@@ -4,9 +4,15 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
+    if len(*result) == 0 {
+        *result = append(*result, viper.GetStringSlice("extraDirs")...)
+    }
+
 	entries, err := os.ReadDir(baseDir)
 	if err != nil {
 		return err
