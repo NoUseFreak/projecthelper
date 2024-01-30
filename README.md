@@ -1,5 +1,10 @@
 # Project Helper
 
+[![Releases](https://img.shields.io/github/v/release/nousefreak/projecthelper?style=for-the-badge)](https://github.com/NoUseFreak/projecthelper/releases)
+[![Build status](https://img.shields.io/github/actions/workflow/status/nousefreak/projecthelper/ci.yml?style=for-the-badge)](ihttps://github.com/NoUseFreak/projecthelper/actions/workflows/ci.yml)
+[![GitHub License](https://img.shields.io/github/license/nousefreak/projecthelper?style=for-the-badge)](https://github.com/NoUseFreak/projecthelper/blob/main/LICENSE)
+[![Static Badge](https://img.shields.io/badge/powered--by-stenic.io-blue?style=for-the-badge&logoColor=blue)](https://stenic.io)
+
 > Project Helper helps you structure your projects on your filesystem.
 
 If you like your projects to be structured like this, that this CLI tool is for you!
@@ -69,13 +74,4 @@ renameRepo:
 extraDirs:
   - /home/username/.config/nvim
 ```
-
-
-## Badges
-
-[![Releases](https://img.shields.io/github/v/release/nousefreak/projecthelper?style=for-the-badge)](https://github.com/NoUseFreak/projecthelper/releases)
-[![Build status](https://img.shields.io/github/actions/workflow/status/nousefreak/projecthelper/ci.yml?style=for-the-badge)](ihttps://github.com/NoUseFreak/projecthelper/actions/workflows/ci.yml)
-[![GitHub License](https://img.shields.io/github/license/nousefreak/projecthelper?style=for-the-badge)](https://github.com/NoUseFreak/projecthelper/blob/main/LICENSE)
-[![Static Badge](https://img.shields.io/badge/powered--by-stenic.io-blue?style=for-the-badge&logoColor=blue)](https://stenic.io)
-
 
