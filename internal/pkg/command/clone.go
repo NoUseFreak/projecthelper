@@ -57,7 +57,7 @@ func cloneRepo(repo string) (string, error) {
 		}
 	}
 
-	fmt.Fprintf(CmdOutput, "(echo \"\\033[0;32m*\\033[0m Cloning %s into %s\" && git clone %s %s); \n", gitURL, targetDir, gitURL, targetDir)
+	fmt.Fprintf(CmdOutput, "(echo \"\\033[0;32m*\\033[0m Cloning %s into %s\" && git clone -q %s %s); \n", gitURL, targetDir, gitURL, targetDir)
 
 	return targetDir, nil
 }
