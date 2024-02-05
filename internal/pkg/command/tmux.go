@@ -14,9 +14,9 @@ import (
 
 func getTmuxCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "tmux [search]",
-		Aliases: []string{"cd"},
-		Short:   "tmux session of result",
+		Use:    "tmux [search]",
+		Hidden: true,
+		Short:  "tmux session of result",
 		Run: func(cmd *cobra.Command, args []string) {
 			path, err := findPath(strings.Join(args, " "))
 			name := strings.ReplaceAll(filepath.Base(path), ".", "_")

@@ -47,6 +47,7 @@ func Execute() {
 	rootCmd.AddCommand(getOrgCmd())
 	rootCmd.AddCommand(getWDIDCmd())
 	rootCmd.AddCommand(getTmuxCmd())
+    rootCmd.AddCommand(getListCmd())
 
 	cobra.OnInitialize(config.InitConfig)
 	cobra.OnInitialize(initLogging)

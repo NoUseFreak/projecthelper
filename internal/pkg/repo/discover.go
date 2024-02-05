@@ -8,10 +8,47 @@ import (
 	"github.com/spf13/viper"
 )
 
+func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
+	out := make(chan string)
+	go func() {
+		defer close(out)
+		if includeExtras {
+			for _, p := range viper.GetStringSlice("extraDirs") {
+				out <- p
+			}
+		}
+
+		entries, err := os.ReadDir(basedir)
+		if err != nil {
+			return
+		}
+		subdirs := []string{}
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				continue
+			}
+			if entry.Name() == ".git" {
+				out <- basedir
+				return
+			}
+			subdirs = append(subdirs, entry.Name())
+		}
+
+		for _, subdir := range subdirs {
+			subchan := GetRepoPathsChan(fmt.Sprintf("%s/%s", basedir, subdir), false)
+			for p := range subchan {
+				out <- p
+			}
+		}
+	}()
+
+	return out
+}
+
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
-    if len(*result) == 0 {
-        *result = append(*result, viper.GetStringSlice("extraDirs")...)
-    }
+	if len(*result) == 0 {
+		*result = append(*result, viper.GetStringSlice("extraDirs")...)
+	}
 
 	entries, err := os.ReadDir(baseDir)
 	if err != nil {
