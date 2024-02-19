@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/nousefreak/projecthelper/internal/pkg/repo"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -44,5 +45,7 @@ func GetBaseDir() string {
 	if baseDir == "" {
 		logrus.Fatal("Basedir not set. Run `ph setup` to set it.")
 	}
-	return baseDir
+
+	return repo.ExpandPath(baseDir)
 }
+

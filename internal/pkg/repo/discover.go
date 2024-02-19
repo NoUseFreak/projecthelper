@@ -8,12 +8,32 @@ import (
 	"github.com/spf13/viper"
 )
 
+func ExpandPath(path string) string {
+    if strings.HasPrefix(path, "~") {
+        home, err := os.UserHomeDir()
+        if err != nil {
+            return path
+        }
+        return home + path[1:]
+    }
+    return os.ExpandEnv(path)
+}
+
+func extraDirs() []string {
+    paths := viper.GetStringSlice("extraDirs")
+    for i, path := range paths {
+        paths[i] = ExpandPath(path)
+    }
+
+    return paths
+}
+
 func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
 	out := make(chan string)
 	go func() {
 		defer close(out)
 		if includeExtras {
-			for _, p := range viper.GetStringSlice("extraDirs") {
+			for _, p := range extraDirs() {
 				out <- p
 			}
 		}
@@ -47,7 +67,7 @@ func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
 
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
 	if len(*result) == 0 {
-		*result = append(*result, viper.GetStringSlice("extraDirs")...)
+		*result = append(*result, extraDirs()...)
 	}
 
 	entries, err := os.ReadDir(baseDir)
