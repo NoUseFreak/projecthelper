@@ -71,7 +71,14 @@ The credentials are read from the environment variables:
 			logrus.Infof("Found %d repos", len(repos))
 
 			for _, repo := range repos {
-				if _, err := cloneRepo(repo.SSHURL); err != nil {
+                var cloneURL string
+                if cloneProtocol == "https" {
+                    cloneURL = repo.CloneURL
+                } else {
+                    cloneURL = repo.SSHURL
+                }
+
+				if _, err := cloneRepo(cloneURL); err != nil {
 					if err == ErrDirectoryAlreadyExists || errors.Unwrap(err) == ErrDirectoryAlreadyExists {
 						logrus.Debugf("Skipping existing repo: %s", repo.Name)
 					} else {
@@ -86,6 +93,7 @@ The credentials are read from the environment variables:
 
 	cmd.Flags().BoolVarP(&cloneForks, "forks", "f", false, "Clone forks")
 	cmd.Flags().StringVarP(&typeHint, "type-hint", "t", "", "Add a type hint to the URL to force a specific provider")
+    cmd.Flags().StringVarP(&cloneProtocol, "clone-protocol", "p", "ssh", "Clone protocol (ssh, https)")
 
 	return cmd
 }

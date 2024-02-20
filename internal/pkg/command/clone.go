@@ -15,6 +15,8 @@ import (
 	giturls "github.com/whilp/git-urls"
 )
 
+var cloneProtocol string
+
 func getCloneCmd() *cobra.Command {
 	cloneCmd := &cobra.Command{
 		Use:   "clone REPO_URL",
@@ -29,6 +31,9 @@ func getCloneCmd() *cobra.Command {
 			fmt.Fprintf(CmdOutput, "cd %s \n", dir)
 		},
 	}
+
+    cloneCmd.Flags().StringVarP(&cloneProtocol, "clone-protocol", "p", "ssh", "Clone protocol (ssh, https)")
+
 	return cloneCmd
 }
 
