@@ -11,13 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cloneForks bool
+var (
+	cloneForks bool
+	typeHint   string
+)
 
 func getOrgCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "org ORANIZATION_URL",
 		Short: "Clone repositories from an organization into the project structure",
-        Long: `Clone repositories from an organization into the project structure.
+		Long: `Clone repositories from an organization into the project structure.
 
 The ORGANIZATION_URL is the URL of the organization on the platform. For example:
 - github.com/nousefreak
@@ -32,7 +35,7 @@ The credentials are read from the environment variables:
 - AZURE_TOKEN
 - BITBUCKET_USERNAME, BITBUCKET_PASSWORD
         `,
-		Args:  cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			parts := strings.Split(args[0], "/")
 
@@ -40,25 +43,19 @@ The credentials are read from the environment variables:
 				logrus.Fatal("Invalid repo")
 			}
 
-			var provider org.OrgProvider
-			switch parts[0] {
-			case "github.com":
-				provider = &org.GithubProvider{
-					Org: parts[1],
-				}
-			case "gitlab.com":
-				provider = &org.GitlabProvider{
-					User: strings.Join(parts[1:], "/"),
-				}
-			case "dev.azure.com":
-				provider = &org.AzureProvider{
-					Org: parts[1],
-				}
-            case "bitbucket.org":
-                provider = &org.BitbucketProvider{
-                    Org: parts[1],
-                }
-			default:
+			providers := []org.OrgProvider{
+				&org.AzureProvider{},
+				&org.GithubProvider{},
+				&org.GitlabProvider{},
+				&org.BitbucketProvider{},
+			}
+
+			provider, err := org.GetProviderFromURL(providers, args[0],	typeHint)
+			if err != nil {
+				logrus.Fatal(err)
+			}
+
+			if provider == nil {
 				logrus.Fatal("Unsupported platform")
 			}
 
@@ -88,6 +85,7 @@ The credentials are read from the environment variables:
 	}
 
 	cmd.Flags().BoolVarP(&cloneForks, "forks", "f", false, "Clone forks")
+	cmd.Flags().StringVarP(&typeHint, "type-hint", "t", "", "Add a type hint to the URL to force a specific provider")
 
 	return cmd
 }

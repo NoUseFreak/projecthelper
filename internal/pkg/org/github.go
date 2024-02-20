@@ -14,6 +14,21 @@ type GithubProvider struct {
     Org string
 }
 
+func (GithubProvider) FromURL(url string, typeHint string) (OrgProvider, error) {
+    parts := strings.Split(url, "/")
+
+    if parts[0] == "github.com" {
+        if len(parts) < 2 {
+            return nil, fmt.Errorf("Invalid repo")
+        }
+        return &GithubProvider{
+            Org: parts[1],
+        }, nil
+    }
+
+    return nil, nil
+}
+
 func (g *GithubProvider) GetRepos() ([]*Repo, bool, error) {
 	repos := []*github.Repository{}
 	repoFunc := getRepoFunc(g.Org)

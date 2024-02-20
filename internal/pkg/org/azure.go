@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/microsoft/azure-devops-go-api/azuredevops/v7"
 	"github.com/microsoft/azure-devops-go-api/azuredevops/v7/core"
@@ -13,6 +14,21 @@ import (
 
 type AzureProvider struct {
 	Org string
+}
+
+func (AzureProvider) FromURL(url string, typeHint string) (OrgProvider, error) {
+	parts := strings.Split(url, "/")
+
+	if parts[0] == "dev.azure.com" {
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("Invalid repo")
+		}
+		return &AzureProvider{
+			Org: parts[1],
+		}, nil
+	}
+
+	return nil, nil
 }
 
 func (a *AzureProvider) GetRepos() ([]*Repo, bool, error) {
@@ -29,18 +45,18 @@ func (a *AzureProvider) GetRepos() ([]*Repo, bool, error) {
 	}
 
 	projects, err := getAzureProjects(ctx, coreClient)
-    if err != nil {
-        return nil, false, fmt.Errorf("failed to list projects: %w", err)
-    }
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to list projects: %w", err)
+	}
 
 	var repos []*Repo
 	for _, project := range projects {
 		r, err := gitClient.GetRepositories(ctx, git.GetRepositoriesArgs{
 			Project: &project,
 		})
-        if err != nil {
-            return nil, false, fmt.Errorf("failed to list repos: %w", err)
-        }
+		if err != nil {
+			return nil, false, fmt.Errorf("failed to list repos: %w", err)
+		}
 
 		for _, repo := range *r {
 			repos = append(repos, &Repo{
@@ -62,7 +78,10 @@ func getAzureProjects(ctx context.Context, client core.Client) ([]string, error)
 	}
 
 	var projects []string
-	if resp != nil {
+	for {
+		if resp == nil {
+			break
+		}
 		for _, project := range (*resp).Value {
 			projects = append(projects, *project.Name)
 		}
