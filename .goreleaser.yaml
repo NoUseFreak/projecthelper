@@ -89,10 +89,10 @@ brews:
 nfpms:
   - file_name_template: "{{ .ConventionalFileName }}"
     id: packages
-    homepage: https://github.com/nousefreak/projecthelper
-    description: "{{ .Env.PROJECT_DESCRIPTION}}"
+    homepage: "{{ .Env.PROJECT_HOMEPAGE }}"
+    description: "{{ .Env.PROJECT_DESCRIPTION }}"
+    license: "mit"
     maintainer: Dries De Peuter <dries@stenic.io>
-    license: MIT
     vendor: NoUseFreak
     bindir: /usr/bin
     section: utils
@@ -114,3 +114,15 @@ nfpms:
       lintian_overrides:
         - statically-linked-binary
         - changelog-file-missing-in-native-package
+
+nix:
+  - repository:
+      owner: NoUseFreak
+      name: nix-nut
+    homepage: "{{ .Env.PROJECT_HOMEPAGE }}"
+    description: "{{ .Env.PROJECT_DESCRIPTION }}"
+    license: "mit"
+    extra_install: |
+      installManPage ./manpages/projecthelper.1.gz
+
+
