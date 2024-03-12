@@ -13,18 +13,18 @@ type BitbucketProvider struct {
 }
 
 func (BitbucketProvider) FromURL(url string, typeHint string) (OrgProvider, error) {
-    parts := strings.Split(url, "/")
+	parts := strings.Split(url, "/")
 
-    if parts[0] == "bitbucket.org" {
-        if len(parts) < 2 {
-            return nil, fmt.Errorf("Invalid repo")
-        }
-        return &BitbucketProvider{
-            Org: parts[1],
-        }, nil
-    }
+	if parts[0] == "bitbucket.org" {
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("Invalid repo")
+		}
+		return &BitbucketProvider{
+			Org: parts[1],
+		}, nil
+	}
 
-    return nil, nil
+	return nil, nil
 }
 
 func (b *BitbucketProvider) GetRepos() ([]*Repo, bool, error) {
