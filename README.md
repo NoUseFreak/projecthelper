@@ -73,5 +73,10 @@ renameRepo:
 # Add extra static directories outside of the basedir
 extraDirs:
   - $HOME/.config/nvim
+
+# Exclude directories you don't want to include in the fuzzyfinder
+excludeDirs:
+  - $HOME/src/gitlab.com/oldstuff
+
 ```
 

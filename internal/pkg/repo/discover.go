@@ -48,6 +48,9 @@ func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
 			if !entry.IsDir() {
 				continue
 			}
+			if inExcludeList(basedir) {
+				continue
+			}
 			if entry.Name() == ".git" {
 				out <- basedir
 				return
@@ -64,6 +67,16 @@ func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
 	}()
 
 	return out
+}
+
+func inExcludeList(name string) bool {
+	excludes := viper.GetStringSlice("excludeDirs")
+	for _, exclude := range excludes {
+		if name == ExpandPath(exclude) {
+			return true
+		}
+	}
+	return false
 }
 
 func GetRepoPathsAsync(baseDir string, result *[]string) error {
