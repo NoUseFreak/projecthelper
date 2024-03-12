@@ -63,7 +63,7 @@ ph wdid 2 days
 
 ```yaml
 # The root of all projects
-basedir: /home/username/src
+basedir: $HOME/src
 
 # Rename repository hosts to an alias for using different ssh keys
 renameRepo:
@@ -72,6 +72,6 @@ renameRepo:
 
 # Add extra static directories outside of the basedir
 extraDirs:
-  - /home/username/.config/nvim
+  - $HOME/.config/nvim
 ```
 
