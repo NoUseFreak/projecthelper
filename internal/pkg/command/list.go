@@ -9,17 +9,16 @@ import (
 
 func getListCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "list_fzf",
-		Short:   "List all repositories",
-        Hidden:  true,
+		Use:    "list_fzf",
+		Short:  "List all repositories",
+		Hidden: true,
 		Run: func(cmd *cobra.Command, args []string) {
-            baseDir := config.GetBaseDir()
-            repos := repo.GetRepoPathsChan(baseDir, true)
-            for repo := range repos {
-                fmt.Println(repo)
-            }
+			baseDir := config.GetBaseDir()
+			repos := repo.GetRepoPathsChan(baseDir, true)
+			for repo := range repos {
+				fmt.Println(repo)
+			}
 		},
 	}
 	return cmd
 }
-

@@ -48,4 +48,3 @@ func GetBaseDir() string {
 
 	return repo.ExpandPath(baseDir)
 }
-

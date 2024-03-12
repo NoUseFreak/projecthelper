@@ -50,7 +50,7 @@ The credentials are read from the environment variables:
 				&org.BitbucketProvider{},
 			}
 
-			provider, err := org.GetProviderFromURL(providers, args[0],	typeHint)
+			provider, err := org.GetProviderFromURL(providers, args[0], typeHint)
 			if err != nil {
 				logrus.Fatal(err)
 			}
@@ -71,12 +71,12 @@ The credentials are read from the environment variables:
 			logrus.Infof("Found %d repos", len(repos))
 
 			for _, repo := range repos {
-                var cloneURL string
-                if cloneProtocol == "https" {
-                    cloneURL = repo.CloneURL
-                } else {
-                    cloneURL = repo.SSHURL
-                }
+				var cloneURL string
+				if cloneProtocol == "https" {
+					cloneURL = repo.CloneURL
+				} else {
+					cloneURL = repo.SSHURL
+				}
 
 				if _, err := cloneRepo(cloneURL); err != nil {
 					if err == ErrDirectoryAlreadyExists || errors.Unwrap(err) == ErrDirectoryAlreadyExists {
@@ -93,7 +93,7 @@ The credentials are read from the environment variables:
 
 	cmd.Flags().BoolVarP(&cloneForks, "forks", "f", false, "Clone forks")
 	cmd.Flags().StringVarP(&typeHint, "type-hint", "t", "", "Add a type hint to the URL to force a specific provider")
-    cmd.Flags().StringVarP(&cloneProtocol, "clone-protocol", "p", "ssh", "Clone protocol (ssh, https)")
+	cmd.Flags().StringVarP(&cloneProtocol, "clone-protocol", "p", "ssh", "Clone protocol (ssh, https)")
 
 	return cmd
 }

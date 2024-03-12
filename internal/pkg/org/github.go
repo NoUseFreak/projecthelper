@@ -11,22 +11,22 @@ import (
 )
 
 type GithubProvider struct {
-    Org string
+	Org string
 }
 
 func (GithubProvider) FromURL(url string, typeHint string) (OrgProvider, error) {
-    parts := strings.Split(url, "/")
+	parts := strings.Split(url, "/")
 
-    if parts[0] == "github.com" {
-        if len(parts) < 2 {
-            return nil, fmt.Errorf("Invalid repo")
-        }
-        return &GithubProvider{
-            Org: parts[1],
-        }, nil
-    }
+	if parts[0] == "github.com" {
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("Invalid repo")
+		}
+		return &GithubProvider{
+			Org: parts[1],
+		}, nil
+	}
 
-    return nil, nil
+	return nil, nil
 }
 
 func (g *GithubProvider) GetRepos() ([]*Repo, bool, error) {
@@ -44,19 +44,19 @@ func (g *GithubProvider) GetRepos() ([]*Repo, bool, error) {
 		}
 	}
 
-    result := []*Repo{}
+	result := []*Repo{}
 	for _, repo := range repos {
 		if strings.EqualFold(repo.Owner.GetLogin(), g.Org) {
-	        result = append(result, &Repo{
-                Name: repo.GetName(),
-                URL: repo.GetHTMLURL(),
-                CloneURL: repo.GetCloneURL(),
-                SSHURL: repo.GetSSHURL(),
-            })
+			result = append(result, &Repo{
+				Name:     repo.GetName(),
+				URL:      repo.GetHTMLURL(),
+				CloneURL: repo.GetCloneURL(),
+				SSHURL:   repo.GetSSHURL(),
+			})
 		}
 	}
 
-    return result, true, nil
+	return result, true, nil
 }
 
 func getRepoFunc(org string) func() ([]*github.Repository, bool, error) {
@@ -90,4 +90,3 @@ func getRepoFunc(org string) func() ([]*github.Repository, bool, error) {
 		return repos, resp.NextPage == 0, err
 	}
 }
-

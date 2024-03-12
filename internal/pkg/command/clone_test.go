@@ -23,7 +23,7 @@ func Test_makeURL(t *testing.T) {
 		{
 			name: "notinma",
 			renameMap: map[string]string{
-                "bb-personal": "bitbucket.org/bla/bla",
+				"bb-personal": "bitbucket.org/bla/bla",
 			},
 			URL:     "ssh://git@github.com/bla/bla",
 			want:    "ssh://git@github.com/bla/bla",
@@ -32,21 +32,21 @@ func Test_makeURL(t *testing.T) {
 		{
 			name: "replace",
 			renameMap: map[string]string{
-                "gh-personal": "github.com/bla",
+				"gh-personal": "github.com/bla",
 			},
 			URL:     "ssh://git@github.com/bla/bla",
 			want:    "ssh://git@gh-personal/bla/bla",
 			wantErr: false,
 		},
-        {
-            name:      "no-replace-in-http",
-            renameMap: map[string]string{
-                "github.com/bla": "gh-personal",
-            },
-            URL:       "http://github.com/bla/bla",
-            want:      "http://github.com/bla/bla",
-            wantErr:   false,
-        },
+		{
+			name: "no-replace-in-http",
+			renameMap: map[string]string{
+				"github.com/bla": "gh-personal",
+			},
+			URL:     "http://github.com/bla/bla",
+			want:    "http://github.com/bla/bla",
+			wantErr: false,
+		},
 	}
 
 	for _, tt := range tests {
