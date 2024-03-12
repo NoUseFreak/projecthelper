@@ -118,7 +118,7 @@ nfpms:
 nix:
   - repository:
       owner: NoUseFreak
-      name: nix-nut
+      name: nix-packages
     homepage: "{{ .Env.PROJECT_HOMEPAGE }}"
     description: "{{ .Env.PROJECT_DESCRIPTION }}"
     license: "mit"
