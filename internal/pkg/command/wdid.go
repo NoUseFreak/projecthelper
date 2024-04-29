@@ -15,6 +15,10 @@ import (
 )
 
 func getWDIDCmd() *cobra.Command {
+	var (
+		filter string
+	)
+
 	cmd := &cobra.Command{
 		Use:   "wdid [AMOUNT UNIT]",
 		Short: "Generate a WhatDidIDo report over a period of time",
@@ -37,6 +41,10 @@ func getWDIDCmd() *cobra.Command {
 				logrus.Fatal(err)
 			}
 
+			if filter != "" {
+				repoPaths = repo.FilterRepoPaths(repoPaths, filter)
+			}
+
 			logrus.Infof("Looking for your commits in %d repos since %s", len(repoPaths), window)
 			reports, err := wdid.GetWDIDReport(window, repoPaths)
 			if err != nil {
@@ -53,9 +61,11 @@ func getWDIDCmd() *cobra.Command {
 					fmt.Fprintf(out, " - %-*s %s\n", width-22, r.ChangeLine(), color.Color(color.FgBlue, t.Format("2006-01-02 15:04")))
 				}
 			}
-
 		},
 	}
+
+	cmd.Flags().StringVarP(&filter, "filter", "f", "", "Filter the projects by a substring")
+
 	return cmd
 
 }
