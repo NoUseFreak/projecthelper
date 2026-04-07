@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/nousefreak/projecthelper/internal/pkg/config"
 	"github.com/sirupsen/logrus"
@@ -13,7 +14,7 @@ import (
 	parallel "github.com/NoUseFreak/go-parallel"
 )
 
-func GetWDIDReport(window string, repoPaths []string) (map[string][]RepoLog, error) {
+func GetWDIDReport(window string, repoPaths []string, groupByDate bool) (map[string][]RepoLog, error) {
 	input := parallel.Input{}
 	for _, repo := range repoPaths {
 		input = append(input, repo)
@@ -62,6 +63,9 @@ func GetWDIDReport(window string, repoPaths []string) (map[string][]RepoLog, err
 		return full[i].Timestamp() < full[j].Timestamp()
 	})
 
+	if groupByDate {
+		return intoDateGroups(unique(full)), nil
+	}
 	return intoGroups(unique(full)), nil
 }
 
@@ -109,10 +113,58 @@ func (r *RepoLog) Timestamp() int64 {
 	return 0
 }
 
+func (r *RepoLog) IsRepoSeparator() bool {
+	return strings.Contains(r.line, "REPO_SEPARATOR:")
+}
+
+func (r *RepoLog) GetSeparatorRepo() string {
+	if r.IsRepoSeparator() {
+		parts := strings.Split(r.line, "REPO_SEPARATOR:")
+		if len(parts) > 1 {
+			return parts[1]
+		}
+	}
+	return ""
+}
+
 func intoGroups(slice []RepoLog) map[string][]RepoLog {
 	groups := make(map[string][]RepoLog)
 	for _, entry := range slice {
 		groups[entry.ShortRepo()] = append(groups[entry.ShortRepo()], entry)
 	}
 	return groups
+}
+
+func intoDateGroups(slice []RepoLog) map[string][]RepoLog {
+	dateGroups := make(map[string]map[string][]RepoLog)
+
+	// First group by date, then by repo
+	for _, entry := range slice {
+		t := time.Unix(entry.Timestamp(), 0)
+		dateKey := t.Format("2006-01-02")
+		repoKey := entry.ShortRepo()
+
+		if dateGroups[dateKey] == nil {
+			dateGroups[dateKey] = make(map[string][]RepoLog)
+		}
+		dateGroups[dateKey][repoKey] = append(dateGroups[dateKey][repoKey], entry)
+	}
+
+	// Flatten into the expected format with repo subheadings
+	result := make(map[string][]RepoLog)
+	for dateKey, repoGroups := range dateGroups {
+		var allEntries []RepoLog
+		for repoKey, entries := range repoGroups {
+			// Add a separator entry for the repo name
+			separator := RepoLog{
+				line:    fmt.Sprintf("0000000000 REPO_SEPARATOR:%s", repoKey),
+				project: "",
+			}
+			allEntries = append(allEntries, separator)
+			allEntries = append(allEntries, entries...)
+		}
+		result[dateKey] = allEntries
+	}
+
+	return result
 }

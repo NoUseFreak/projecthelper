@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/nousefreak/projecthelper/internal/pkg/color"
@@ -16,7 +17,8 @@ import (
 
 func getWDIDCmd() *cobra.Command {
 	var (
-		filter string
+		filter      string
+		groupByDate bool
 	)
 
 	cmd := &cobra.Command{
@@ -46,25 +48,53 @@ func getWDIDCmd() *cobra.Command {
 			}
 
 			logrus.Infof("Looking for your commits in %d repos since %s", len(repoPaths), window)
-			reports, err := wdid.GetWDIDReport(window, repoPaths)
+			reports, err := wdid.GetWDIDReport(window, repoPaths, groupByDate)
 			if err != nil {
 				logrus.Fatal(err)
 			}
 
 			width, _, _ := term.GetSize(0)
 			out := os.Stderr
-			for name, group := range reports {
+
+			// Sort the keys (dates) if grouping by date
+			var sortedKeys []string
+			if groupByDate {
+				for name := range reports {
+					sortedKeys = append(sortedKeys, name)
+				}
+				sort.Strings(sortedKeys) // This will sort dates chronologically (oldest first)
+			} else {
+				// For repo grouping, maintain original order
+				for name := range reports {
+					sortedKeys = append(sortedKeys, name)
+				}
+			}
+
+			for _, name := range sortedKeys {
+				group := reports[name]
 				fmt.Fprintln(out, "")
 				fmt.Fprintf(out, "%s\n", color.Color(color.FgGreen, name))
 				for _, r := range group {
 					t := time.Unix(r.Timestamp(), 0)
-					fmt.Fprintf(out, " - %-*s %s\n", width-22, r.ChangeLine(), color.Color(color.FgBlue, t.Format("2006-01-02 15:04")))
+					if groupByDate {
+						// Check if this is a repository separator
+						if r.IsRepoSeparator() {
+							repoName := r.GetSeparatorRepo()
+							fmt.Fprintf(out, "  %s\n", color.Color(color.FgYellow, repoName))
+							continue
+						}
+						// Regular commit entry with timestamp
+						fmt.Fprintf(out, "   - %-*s %s\n", width-25, r.ChangeLine(), color.Color(color.FgBlue, t.Format("2006-01-02 15:04")))
+					} else {
+						fmt.Fprintf(out, " - %-*s %s\n", width-22, r.ChangeLine(), color.Color(color.FgBlue, t.Format("2006-01-02 15:04")))
+					}
 				}
 			}
 		},
 	}
 
 	cmd.Flags().StringVarP(&filter, "filter", "f", "", "Filter the projects by a substring")
+	cmd.Flags().BoolVarP(&groupByDate, "group-by-date", "d", false, "Group commits by date instead of repository")
 
 	return cmd
 
