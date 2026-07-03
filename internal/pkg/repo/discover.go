@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/spf13/viper"
 )
@@ -48,22 +49,28 @@ func GetRepoPathsChan(basedir string, includeExtras bool) <-chan string {
 			if !entry.IsDir() {
 				continue
 			}
-			if inExcludeList(basedir) {
-				continue
-			}
 			if entry.Name() == ".git" {
 				out <- basedir
 				return
 			}
-			subdirs = append(subdirs, entry.Name())
+			child := fmt.Sprintf("%s/%s", basedir, entry.Name())
+			if inExcludeList(child) {
+				continue
+			}
+			subdirs = append(subdirs, child)
 		}
 
-		for _, subdir := range subdirs {
-			subchan := GetRepoPathsChan(fmt.Sprintf("%s/%s", basedir, subdir), false)
-			for p := range subchan {
-				out <- p
-			}
+		var wg sync.WaitGroup
+		for _, child := range subdirs {
+			wg.Add(1)
+			go func(dir string) {
+				defer wg.Done()
+				for p := range GetRepoPathsChan(dir, false) {
+					out <- p
+				}
+			}(child)
 		}
+		wg.Wait()
 	}()
 
 	return out
