@@ -10,6 +10,7 @@ type Repo struct {
 	URL      string
 	CloneURL string
 	SSHURL   string
+	Archived bool
 }
 
 func GetProviderFromURL(providers []OrgProvider, url string, typeHint string) (OrgProvider, error) {
