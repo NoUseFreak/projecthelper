@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	cloneForks bool
-	typeHint   string
+	cloneForks    bool
+	cloneArchived bool
+	typeHint      string
 )
 
 func getOrgCmd() *cobra.Command {
@@ -71,6 +72,11 @@ The credentials are read from the environment variables:
 			logrus.Infof("Found %d repos", len(repos))
 
 			for _, repo := range repos {
+				if repo.Archived && !cloneArchived {
+					logrus.Debugf("Skipping archived repo: %s", repo.Name)
+					continue
+				}
+
 				var cloneURL string
 				if cloneProtocol == "https" {
 					cloneURL = repo.CloneURL
@@ -92,6 +98,7 @@ The credentials are read from the environment variables:
 	}
 
 	cmd.Flags().BoolVarP(&cloneForks, "forks", "f", false, "Clone forks")
+	cmd.Flags().BoolVarP(&cloneArchived, "archived", "a", false, "Clone archived repositories")
 	cmd.Flags().StringVarP(&typeHint, "type-hint", "t", "", "Add a type hint to the URL to force a specific provider")
 	cmd.Flags().StringVarP(&cloneProtocol, "clone-protocol", "p", "ssh", "Clone protocol (ssh, https)")
 

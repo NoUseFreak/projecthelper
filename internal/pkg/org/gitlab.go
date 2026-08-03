@@ -58,6 +58,7 @@ func (g *GitlabProvider) GetRepos() ([]*Repo, bool, error) {
 				URL:      project.WebURL,
 				CloneURL: project.HTTPURLToRepo,
 				SSHURL:   project.SSHURLToRepo,
+				Archived: project.Archived,
 			})
 
 			if resp.CurrentPage >= resp.TotalPages {

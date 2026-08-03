@@ -64,6 +64,7 @@ func (a *AzureProvider) GetRepos() ([]*Repo, bool, error) {
 				URL:      *repo.RemoteUrl,
 				CloneURL: *repo.RemoteUrl,
 				SSHURL:   *repo.SshUrl,
+				Archived: repo.IsDisabled != nil && *repo.IsDisabled,
 			})
 		}
 	}

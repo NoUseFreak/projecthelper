@@ -52,6 +52,7 @@ func (g *GithubProvider) GetRepos() ([]*Repo, bool, error) {
 				URL:      repo.GetHTMLURL(),
 				CloneURL: repo.GetCloneURL(),
 				SSHURL:   repo.GetSSHURL(),
+				Archived: repo.GetArchived(),
 			})
 		}
 	}
